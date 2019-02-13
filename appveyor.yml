@@ -1,0 +1,17 @@
+environment:
+  PATH:  C:\MinGW\bin;%PATH%
+  CXX:   g++
+  CC:    gcc
+init:
+  - git config --global core.autocrlf input
+install:
+  # - ps: Start-FileDownload 'https://github.com/dzop/emacs-zmq/releases/download/v0.9.1/emacs-zmq-x86_64-w64-mingw32.tar.gz'
+  # - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER && tar -xzf emacs-zmq-x86_64-w64-mingw32.tar.gz"
+  # - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER && mv emacs-zmq-x86_64-w64-mingw32/*.dll ."
+  - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER && make"
+  - git clone git://git.savannah.gnu.org/emacs.git
+  - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER/emacs && ./autogen.sh"
+  - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER/emacs && PKG_CONFIG_PATH=/mingw64/lib/pkgconfig ./configure --without-imagemagick --with-modules"
+  - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER/emacs && make && make install prefix=$APPVEYOR_BUILD_FOLDER"
+test_script:
+  - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER && make EMACS=$APPVEYOR_BUILD_FOLDER/emacs/bin/emacs.exe test"

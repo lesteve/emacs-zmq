@@ -107,8 +107,11 @@ endif
 	git pull --quiet origin && \
 	git checkout v$(ZMQ_VERSION) && \
 	./autogen.sh && \
-	./configure CXXFLAGS=$(CXXFLAGS) --quiet --without-docs --prefix=$(ZMQ_BUILD_DIR) \
-		--enable-drafts=yes --enable-libunwind=no --enable-static=no && \
+	./configure CXXFLAGS=$(CXXFLAGS) --without-docs --prefix=$(ZMQ_BUILD_DIR) \
+		--enable-drafts=yes --enable-libunwind=no --enable-static=no \
+		--disable-curve-keygen --disable-perf --disable-eventfd \
+		--with-poller=$(ZMQ_POLLER) \
+		--host=$(ZMQ_BUILD_HOST) && \
 	$(MAKE) install
 ifeq ($(OS),Windows_NT)
 	cp $(ZMQ_BUILD_DIR)/bin/libzmq.dll $(CURDIR)
